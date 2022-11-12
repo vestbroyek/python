@@ -25,18 +25,18 @@ def check_types(severity = 1):
             # ensure each annotation is a type
             for param_type in annotations.values():
                 if param_type not in (int, str, bool, float):
-                    raise TypeError('Wrong annotations types')
+                    raise TypeError('Invalid annotations types')
             @functools.wraps(function)
             def wrapper(*args, **kwargs):
                 # bind args to the original function
                 bound_args = bind_args(function, *args, **kwargs)
                 # check them against the annotations
                 if len(annotations) != 0:
-                    for key, arg, expected_type in zip(bound_args.keys(), bound_args.values(), annotations.values()):
+                    for key in bound_args.keys():
                         try:
                             # print(f"Checking if {bound_args[key]} is of type {annotations[key]}")
                             if type(bound_args[key]) != annotations[key]:
-                                messaging(f"Type mismatch, expected {annotations[key]} but received {bound_args[key]}!")
+                                messaging(f"Type mismatch, expected {annotations[key]} but received {type(bound_args[key])}: {bound_args[key]}!")
                         except KeyError: pass
                 # check return type
                 expected_return_type = annotations['return']
